@@ -2,15 +2,16 @@ module FayeRails
   class Controller
     class Channel
 
-      attr_reader :channel, :endpoint
+      attr_reader :channel, :endpoint, :client_extension
 
-      def initialize(channel, endpoint=nil)
+      def initialize(channel, client_extension=nil, endpoint=nil)
         @channel = channel
         @endpoint = endpoint
+        @client_extension = client_extension
       end
 
       def client
-        FayeRails.client(endpoint)
+        FayeRails.client(client_extension, endpoint)
       end
 
       def publish(message)
@@ -40,7 +41,7 @@ module FayeRails
 
       def subscribe(&block)
         EM.schedule do
-          @subscription = FayeRails.client(endpoint).subscribe(channel) do |message|
+          @subscription = FayeRails.client(client_extension, endpoint).subscribe(channel) do |message|
             Message.new.tap do |m|
               m.message = message
               m.channel = channel
@@ -52,7 +53,7 @@ module FayeRails
 
       def unsubscribe
         EM.schedule do
-          FayeRails.client(endpoint).unsubscribe(@subscription)
+          FayeRails.client(client_extension,endpoint).unsubscribe(@subscription)
         end
       end
 

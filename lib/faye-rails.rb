@@ -39,4 +39,14 @@ module FayeRails
     end
   end
 
+  def self.client(extension=nil, where=nil)
+    if where
+      client = servers.at(where).first.get_client
+    else
+      client = servers.first.get_client
+    end
+    client.add_extension extension
+    client
+  end
+
 end

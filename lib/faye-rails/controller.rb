@@ -35,8 +35,8 @@ module FayeRails
       (@channels ||= []) << channel
     end
 
-    def channel(channel, endpoint=nil, &block)
-      channel = Channel.new(channel, endpoint)
+    def channel(channel, client_extension=nil, endpoint=nil, &block)
+      channel = Channel.new(channel, client_extension, endpoint)
       channel.instance_eval(&block)
       (@channels ||= []) << channel
     end
